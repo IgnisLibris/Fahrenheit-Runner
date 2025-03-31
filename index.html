@@ -13,15 +13,47 @@
             text-align: center;
         }
 
+        /* Tela de carregamento */
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Times New Roman', serif;
+        }
+
+        #loadingScreen img {
+            width: 100px;
+            height: 100px;
+        }
+
+        #loadingScreen h1 {
+            font-size: 30px;
+            color: black;
+            margin-top: 10px;
+        }
+
+        #loadingQuote {
+            font-size: 18px;
+            color: black;
+            width: 60%;
+            margin-top: 10px;
+        }
+
         /* Título */
         #gameTitle {
             font-size: 40px;
-            font-family: 'Times New Roman', serif;
             color: red;
             margin-top: 20px;
         }
 
-        /* Área do jogo com moldura vermelha */
+        /* Área do jogo */
         #gameArea {
             position: relative;
             width: 936px;
@@ -29,26 +61,23 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 0;
-            border: 2px solid red; /* Moldura vermelha */
-            margin-top: 20px; /* Aproximado do título */
-            margin-left: auto;
-            margin-right: auto;
+            border: 2px solid red;
+            margin: 20px auto 0;
         }
 
         canvas {
             background-color: #e0e0e0;
         }
 
-        /* Tela de Fim de Jogo */
+        /* Tela de fim de jogo */
         #gameOverScreen {
             display: none;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 60%; /* Aumentado */
-            height: 50%; /* Aumentado */
+            width: 60%;
+            height: 50%;
             background-color: red;
             color: white;
             text-align: center;
@@ -58,7 +87,6 @@
         }
 
         #gameOverScreen button {
-            font-family: 'Times New Roman', serif;
             font-size: 18px;
             padding: 10px 20px;
             background-color: white;
@@ -73,41 +101,45 @@
             color: white;
         }
 
-        /* Placar dentro da área do jogo */
+        /* Placar */
         #scoreBoard {
             position: absolute;
             top: 10px;
             right: 10px;
-            background-color: rgba(128, 128, 128, 0.7); /* Caixa cinza semi-transparente */
+            background-color: rgba(128, 128, 128, 0.7);
             padding: 5px 10px;
             border-radius: 5px;
             color: black;
             font-size: 18px;
-            font-family: 'Times New Roman', serif;
         }
 
-        /* Para garantir que a área de jogo seja centralizada e o conteúdo não se sobreponha */
         #contentWrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
+            display: none; /* Escondido até a tela de carregamento sumir */
         }
-
     </style>
 </head>
 <body>
-    <div id="contentWrapper">
-        <div id="gameTitle">Fahrenheit Runner</div> <!-- Título do Jogo -->
 
+    <!-- Tela de carregamento -->
+    <div id="loadingScreen">
+        <img src="Fire.gif" alt="Fogo">
+        <h1>Fahrenheit Runner</h1>
+        <p id="loadingQuote"></p>
+    </div>
+
+    <!-- Conteúdo do jogo -->
+    <div id="contentWrapper">
+        <div id="gameTitle">Fahrenheit Runner</div>
         <div id="gameArea">
             <canvas id="gameCanvas"></canvas>
-            <!-- Tela de fim de jogo -->
             <div id="gameOverScreen">
                 <h1>Burn, baby, burn!</h1>
                 <p id="finalScore"></p>
                 <button onclick="window.location.reload();">Jogar Novamente</button>
             </div>
-            <!-- Placar dentro da área do jogo -->
             <div id="scoreBoard">
                 <span id="score">Pontos: 0</span><br>
                 <span id="record">Recorde: 0</span>
@@ -115,12 +147,53 @@
         </div>
     </div>
 
+    <script>
+        const quotes = [
+            "“Não precisamos ser deixados sozinhos. Precisamos ser realmente incomodados de vez em quando.” - Fahrenheit 451",
+            "“Queimar era um prazer.” - Fahrenheit 451",
+            "“Façamos uma brecha no espírito do homem. Quem sabe quem poderia ser alvo do homem lido?” - Fahrenheit 451",
+            "“Não as coloque em terreno movediço, como filosofia ou sociologia, com que comparar suas experiências. Aí reside a melancolia.” - Fahrenheit 451",
+            "“Eu me agarrarei firme ao mundo algum dia. Já pus um dedo nele; é um começo.” - Fahrenheit 451"
+        ];
+
+        function getRandomTime(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function showLoadingScreen() {
+            const lastVisit = localStorage.getItem("lastVisit");
+            const now = Date.now();
+            const thirtyMinutes = 30 * 60 * 1000;
+
+            if (lastVisit && now - lastVisit < thirtyMinutes) {
+                document.getElementById("loadingScreen").style.display = "none";
+                document.getElementById("contentWrapper").style.display = "flex";
+                return;
+            }
+
+            localStorage.setItem("lastVisit", now);
+
+            const quoteElement = document.getElementById("loadingQuote");
+            let quoteIndex = 0;
+            quoteElement.innerText = quotes[quoteIndex];
+
+            setInterval(() => {
+                quoteIndex = (quoteIndex + 1) % quotes.length;
+                quoteElement.innerText = quotes[quoteIndex];
+            }, 10000);
+
+            const loadingTime = getRandomTime(5000, 20000);
+
+            setTimeout(() => {
+                document.getElementById("loadingScreen").style.display = "none";
+                document.getElementById("contentWrapper").style.display = "flex";
+            }, loadingTime);
+        }
+
+        showLoadingScreen();
+    </script>
+
     <script src="jogo.js"></script>
+
 </body>
 </html>
-
-
-
-
-
-
