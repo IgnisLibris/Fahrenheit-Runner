@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ignis Libris</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+
+        /* Tela de carregamento */
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            overflow: hidden;
+            opacity: 1;
+            transition: opacity 1s ease-out;
+        }
+
+        #fireImage {
+            width: 200px;
+            height: auto;
+        }
+
+        #quote {
+            font-size: 24px;
+            color: black;
+            font-family: 'Times New Roman', serif;
+            margin-top: 20px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Animação de queda da tela de carregamento */
+        @keyframes fall {
+            from {
+                top: -100vh;
+            }
+            to {
+                top: 0;
+            }
+        }
+
+        /* Tela de fim de jogo */
+        #gameOverScreen {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50%;
+            height: 40%;
+            background-color: red;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-family: 'Times New Roman', serif;
+            border-radius: 10px;
+        }
+
+        #gameOverScreen button {
+            font-family: 'Times New Roman', serif;
+            font-size: 18px;
+            padding: 10px 20px;
+            background-color: white;
+            color: red;
+            border: 2px solid red;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        #gameOverScreen button:hover {
+            background-color: red;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="loadingScreen">
+        <div>
+            <img id="fireImage" src="fire.gif" alt="Chama animada">
+            <div id="quote"></div>
+        </div>
+    </div>
+
+    <div id="gameOverScreen">
+        <h1>Burn, baby, burn!</h1>
+        <p id="finalScore"></p>
+        <button onclick="window.location.reload();">Jogar Novamente</button>
+    </div>
+
+    <script>
+        const quotes = [
+            "“Não precisamos ser deixados sozinhos. Precisamos ser realmente incomodados de vez em quando.” - Fahrenheit 451",
+            "“Queimar era um prazer.” - Fahrenheit 451",
+            "“Façamos uma brecha no espírito do homem. Quem sabe quem poderia ser alvo do homem lido?” - Fahrenheit 451",
+            "“Não as coloque em terreno movediço, como filosofia ou sociologia, com que comparar suas experiências. Aí reside a melancolia.” - Fahrenheit 451",
+            "“Eu me agarrarei firme ao mundo algum dia. Já pus um dedo nele; é um começo.” - Fahrenheit 451"
+        ];
+
+        // Verificar se o jogador já acessou antes
+        if (!localStorage.getItem("firstVisit")) {
+            localStorage.setItem("firstVisit", "true");
+
+            // Exibir a tela de carregamento
+            document.getElementById("loadingScreen").style.display = "flex";
+
+            // Definir tempo de exibição aleatório (entre 5 e 25 segundos)
+            const loadingTime = Math.random() * (25000 - 5000) + 5000;
+            const quoteChangeInterval = 10000; // 10 segundos para mudar a citação
+
+            let quoteIndex = 0;
+
+            // Função para atualizar a citação aleatória
+            function updateQuote() {
+                const quoteElement = document.getElementById("quote");
+                quoteElement.textContent = quotes[quoteIndex];
+                quoteIndex = (quoteIndex + 1) % quotes.length;
+            }
+
+            // Atualizar a citação a cada 10 segundos
+            setInterval(updateQuote, quoteChangeInterval);
+
+            // Mostrar a citação pela primeira vez
+            updateQuote();
+
+            // Ocultar a tela de carregamento após o tempo aleatório
+            setTimeout(function() {
+                document.getElementById("loadingScreen").style.animation = "fall 1s forwards";
+                document.getElementById("loadingScreen").style.opacity = 0;
+
+                // Iniciar o jogo ou transição para a próxima tela
+                setTimeout(function() {
+                    document.getElementById("loadingScreen").style.display = "none";
+                    // Aqui você pode iniciar a lógica do seu jogo ou transição para o conteúdo principal
+                }, 1000);
+            }, loadingTime);
+        } else {
+            // Se não for a primeira visita, ocultar a tela de carregamento imediatamente
+            document.getElementById("loadingScreen").style.display = "none";
+        }
+
+        // Funções adicionais do jogo (não alteradas)
+        // Seu código do jogo aqui...
+    </script>
+</body>
+</html>
