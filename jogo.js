@@ -22,7 +22,7 @@ const player = {
     speed: 5,
     isJumping: false,
     velocityY: 0,
-    gravity: 0.9,
+    gravity: 0.7,
     jumpHeight: -13,
     frameIndex: 0,  // Índice do frame atual
     frameCount: 7,  // Número total de frames (Character_1 a Character_7)
