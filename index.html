@@ -21,7 +21,7 @@
             width: 100%;
             height: 100%;
             background-color: white;
-            display: flex;
+            display: none; /* Agora a tela começa escondida */
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -117,7 +117,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            display: none; /* Escondido até a tela de carregamento sumir */
         }
     </style>
 </head>
@@ -165,26 +164,35 @@
             const now = Date.now();
             const thirtyMinutes = 30 * 60 * 1000;
 
-            if (lastVisit && now - lastVisit < tenMinutes) {
+            // Se o usuário jogou nos últimos 30 minutos, pula a tela de carregamento
+            if (lastVisit && now - lastVisit < thirtyMinutes) {
                 document.getElementById("loadingScreen").style.display = "none";
                 document.getElementById("contentWrapper").style.display = "flex";
                 return;
             }
 
+            // Salva o novo tempo de visita
             localStorage.setItem("lastVisit", now);
 
+            // Exibe a tela de carregamento corretamente
+            document.getElementById("loadingScreen").style.display = "flex";
+            document.getElementById("contentWrapper").style.display = "none";
+
+            // Alterna frases a cada 10 segundos
             const quoteElement = document.getElementById("loadingQuote");
             let quoteIndex = 0;
             quoteElement.innerText = quotes[quoteIndex];
 
-            setInterval(() => {
+            const quoteInterval = setInterval(() => {
                 quoteIndex = (quoteIndex + 1) % quotes.length;
                 quoteElement.innerText = quotes[quoteIndex];
             }, 10000);
 
-            const loadingTime = getRandomTime(10000, 20000);
+            // Define o tempo de carregamento aleatório entre 5s e 20s
+            const loadingTime = getRandomTime(5000, 20000);
 
             setTimeout(() => {
+                clearInterval(quoteInterval);
                 document.getElementById("loadingScreen").style.display = "none";
                 document.getElementById("contentWrapper").style.display = "flex";
             }, loadingTime);
