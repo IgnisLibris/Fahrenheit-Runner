@@ -165,7 +165,7 @@
             const now = Date.now();
             const thirtyMinutes = 30 * 60 * 1000;
 
-            if (lastVisit && now - lastVisit < thirtyMinutes) {
+            if (lastVisit && now - lastVisit < tenMinutes) {
                 document.getElementById("loadingScreen").style.display = "none";
                 document.getElementById("contentWrapper").style.display = "flex";
                 return;
@@ -182,7 +182,7 @@
                 quoteElement.innerText = quotes[quoteIndex];
             }, 10000);
 
-            const loadingTime = getRandomTime(5000, 20000);
+            const loadingTime = getRandomTime(10000, 20000);
 
             setTimeout(() => {
                 document.getElementById("loadingScreen").style.display = "none";
