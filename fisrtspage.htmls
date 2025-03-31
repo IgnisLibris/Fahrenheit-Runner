@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fahrenheit Runner</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { display: flex; justify-content: center; align-items: center; height: 100vh; background: white; flex-direction: column; font-family: 'Times New Roman', serif; }
+        #fire { width: 100px; height: 100px; background: url('Fire.gif') no-repeat center; background-size: contain; }
+        #title { font-size: 24px; font-weight: bold; margin-top: 20px; }
+        #quote { font-size: 16px; text-align: center; margin-top: 10px; max-width: 80%; }
+    </style>
+</head>
+<body>
+    <div id="fire"></div>
+    <div id="title">Fahrenheit Runner</div>
+    <div id="quote"></div>
+    
+    <script>
+        const quotes = [
+            "Não precisamos ser deixados sozinhos. Precisamos ser realmente incomodados de vez em quando.",
+            "Queimar era um prazer.",
+            "Façamos uma brecha no espírito do homem. Quem sabe quem poderia ser alvo do homem lido?",
+            "Não as coloque em terreno movediço, como filosofia ou sociologia, com que comparar suas experiências. Aí reside a melancolia.",
+            "Eu me agarrarei firme ao mundo algum dia. Já pus um dedo nele; é um começo."
+        ];
+        
+        function showRandomQuote() {
+            document.getElementById('quote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
+        }
+        
+        showRandomQuote();
+        setInterval(showRandomQuote, 10000);
+        
+        const lastVisit = localStorage.getItem("lastVisit");
+        const now = Date.now();
+        const timeDiff = lastVisit ? now - parseInt(lastVisit) : Infinity;
+        
+        if (timeDiff < 30 * 60 * 1000) {
+            window.location.href = "index.html";
+        } else {
+            localStorage.setItem("lastVisit", now);
+            setTimeout(() => { window.location.href = "index.html"; }, Math.random() * (20000 - 5000) + 5000);
+        }
+    </script>
+</body>
+</html>
