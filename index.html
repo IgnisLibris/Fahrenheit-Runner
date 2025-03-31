@@ -185,10 +185,10 @@
         function showLoadingScreen() {
             const lastVisit = localStorage.getItem("lastVisit");
             const now = Date.now();
-            const thirtyMinutes = 30 * 60 * 1000;
+            const thirtyMinutes = 10 * 60 * 1000;
 
             // Se o usuário jogou nos últimos 30 minutos, pula a tela de carregamento
-            if (lastVisit && now - lastVisit < thirtyMinutes) {
+            if (lastVisit && now - lastVisit < tenMinutes) {
                 document.getElementById("loadingScreen").style.display = "none";
                 document.getElementById("contentWrapper").style.display = "flex";
                 return;
