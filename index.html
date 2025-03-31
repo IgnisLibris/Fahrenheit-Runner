@@ -26,6 +26,7 @@
             align-items: center;
             justify-content: center;
             font-family: 'Times New Roman', serif;
+            z-index: 1000;
         }
 
         #loadingScreen img {
@@ -63,6 +64,29 @@
         #rotateScreen img {
             width: 150px;
             height: 150px;
+        }
+
+        /* Título */
+        #gameTitle {
+            font-size: 40px;
+            color: red;
+            margin-top: 20px;
+        }
+
+        /* Área do jogo */
+        #gameArea {
+            position: relative;
+            width: 936px;
+            height: 230px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid red;
+            margin: 20px auto 0;
+        }
+
+        canvas {
+            background-color: #e0e0e0;
         }
 
         /* Conteúdo do jogo */
@@ -142,7 +166,6 @@
             }
         }
 
-        document.getElementById("contentWrapper").style.display = "none";
         showLoadingScreen();
     </script>
 </body>
