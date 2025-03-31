@@ -1,11 +1,33 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fahrenheit Runner</title>
     <style>
-        /* Tela de carregamento */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+        }
+
+        #gameArea {
+            position: relative;
+            width: 936px;
+            height: 230px;
+            overflow: hidden;
+            margin: 0 auto;
+            background-color: #1b1b1b;
+            border: 2px solid red;
+        }
+
+        #gameCanvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Tela de Carregamento */
         #loadingScreen {
             position: fixed;
             top: 0;
@@ -16,67 +38,78 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
-            text-align: center;
-            z-index: 9999;
-            visibility: visible;
-            opacity: 1;
-            transition: opacity 1s ease, visibility 1s ease;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 1s, opacity 1s;
         }
 
-        #loadingScreen h1 {
-            font-size: 36px;
-            font-family: 'Times New Roman', serif;
-            color: black;
+        #loadingScreen .content {
+            text-align: center;
+        }
+
+        #loadingQuote {
+            font-size: 20px;
+            font-weight: bold;
             margin-bottom: 20px;
+            color: black;
         }
 
         #loadingScreen img {
             width: 100px;
             height: 100px;
-            margin-bottom: 20px;
         }
 
-        #loadingScreen p {
-            font-size: 18px;
-            font-family: 'Times New Roman', serif;
-            color: black;
-            font-style: italic;
-        }
-
-        /* Efeito para desaparecer a tela de carregamento */
+        /* Animação de fade-out */
         @keyframes fadeOut {
-            0% { opacity: 1; }
-            100% { opacity: 0; visibility: hidden; }
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        /* Game content */
+        #gameContent {
+            display: none;
+        }
+
+        #gameOverScreen {
+            display: none;
+            text-align: center;
+            color: red;
+        }
+
+        #finalScore {
+            font-size: 20px;
         }
     </style>
 </head>
 <body>
-    <!-- Tela de carregamento -->
+    <!-- Tela de Carregamento -->
     <div id="loadingScreen">
-        <img src="Fire.gif" alt="Chama animada"> <!-- GIF de fogo -->
-        <h1>Fahrenheit Runner</h1>
-        <p id="loadingQuote"></p> <!-- Citação aleatória -->
+        <div class="content">
+            <img src="Fire.gif" alt="Fire Animation">
+            <p id="loadingQuote">Aguarde...</p>
+        </div>
     </div>
 
-    <!-- O conteúdo do jogo vem depois -->
-    <div id="gameContent" style="display: none;">
-        <div id="gameTitle">Ignis Libris</div> <!-- Título do Jogo -->
+    <!-- Conteúdo do Jogo -->
+    <div id="gameContent">
         <div id="gameArea">
             <canvas id="gameCanvas"></canvas>
-            <div id="gameOverScreen">
-                <h1>Burn, baby, burn!</h1>
-                <p id="finalScore"></p>
-                <button onclick="window.location.reload();">Jogar Novamente</button>
-            </div>
         </div>
-        <div id="scoreBoard">
-            <span id="score">Pontos: 0</span><br>
-            <span id="record">Recorde: 0</span>
+
+        <!-- Tela de Game Over -->
+        <div id="gameOverScreen">
+            <p id="finalScore">Fim de jogo!</p>
         </div>
+
+        <!-- Pontuação -->
+        <p id="score">Pontos: 0</p>
+        <p id="record">Recorde: 0</p>
     </div>
 
-    <script src="jogo.js"></script>
+    <script src="game.js"></script>
 </body>
 </html>
-
