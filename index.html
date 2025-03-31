@@ -179,6 +179,16 @@
         ];
 
         function showLoadingScreen() {
+            const lastVisit = localStorage.getItem("lastVisit");
+            const now = Date.now();
+            const thirtyMinutes = 30 * 60 * 1000;
+
+            if (lastVisit && now - lastVisit < thirtyMinutes) {
+                checkMobile();
+                return;
+            }
+
+            localStorage.setItem("lastVisit", now);
             document.getElementById("loadingScreen").style.display = "flex";
             document.getElementById("contentWrapper").style.display = "none";
 
