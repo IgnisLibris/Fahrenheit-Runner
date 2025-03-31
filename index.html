@@ -21,7 +21,7 @@
             width: 100%;
             height: 100%;
             background-color: white;
-            display: none;
+            display: none; /* Agora a tela começa escondida */
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -44,25 +44,6 @@
             color: black;
             width: 60%;
             margin-top: 10px;
-        }
-
-        /* Tela de orientação para celulares */
-        #rotateScreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: white;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-        }
-
-        #rotateScreen img {
-            width: 150px;
-            height: 150px;
         }
 
         /* Título */
@@ -133,13 +114,32 @@
         }
 
         #contentWrapper {
-            display: none;
+            display: flex;
             flex-direction: column;
             align-items: center;
+        }
+
+        /* Tela do GIF no celular */
+        #cellLoadingScreen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #cellLoadingScreen img {
+            width: 150px;
+            height: 150px;
         }
     </style>
 </head>
 <body>
+
     <!-- Tela de carregamento -->
     <div id="loadingScreen">
         <img src="Fire.gif" alt="Fogo">
@@ -147,9 +147,9 @@
         <p id="loadingQuote"></p>
     </div>
 
-    <!-- Tela de orientação para celulares -->
-    <div id="rotateScreen">
-        <img src="girarcell.gif" alt="Gire o celular">
+    <!-- Tela de animação de celular -->
+    <div id="cellLoadingScreen">
+        <img src="girarcell.gif" alt="Carregando">
     </div>
 
     <!-- Conteúdo do jogo -->
@@ -178,41 +178,69 @@
             "“Eu me agarrarei firme ao mundo algum dia. Já pus um dedo nele; é um começo.” - Fahrenheit 451"
         ];
 
+        function getRandomTime(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
         function showLoadingScreen() {
             const lastVisit = localStorage.getItem("lastVisit");
             const now = Date.now();
             const thirtyMinutes = 30 * 60 * 1000;
 
+            // Se o usuário jogou nos últimos 30 minutos, pula a tela de carregamento
             if (lastVisit && now - lastVisit < thirtyMinutes) {
-                checkMobile();
+                document.getElementById("loadingScreen").style.display = "none";
+                document.getElementById("contentWrapper").style.display = "flex";
                 return;
             }
 
+            // Salva o novo tempo de visita
             localStorage.setItem("lastVisit", now);
+
+            // Exibe a tela de carregamento corretamente
             document.getElementById("loadingScreen").style.display = "flex";
+            document.getElementById("contentWrapper").style.display = "none";
+
+            // Alterna frases a cada 10 segundos
+            const quoteElement = document.getElementById("loadingQuote");
+            let quoteIndex = 0;
+            quoteElement.innerText = quotes[quoteIndex];
+
+            const quoteInterval = setInterval(() => {
+                quoteIndex = (quoteIndex + 1) % quotes.length;
+                quoteElement.innerText = quotes[quoteIndex];
+            }, 10000);
+
+            // Define o tempo de carregamento aleatório entre 5s e 20s
+            const loadingTime = getRandomTime(5000, 20000);
 
             setTimeout(() => {
+                clearInterval(quoteInterval);
                 document.getElementById("loadingScreen").style.display = "none";
-                checkMobile();
-            }, 5000);
+
+                // Se for um dispositivo móvel, mostra o GIF por 3 segundos
+                if (isMobileDevice()) {
+                    document.getElementById("cellLoadingScreen").style.display = "flex";
+
+                    // Garante que o GIF será exibido por 3 segundos
+                    setTimeout(() => {
+                        document.getElementById("cellLoadingScreen").style.display = "none";
+                        document.getElementById("contentWrapper").style.display = "flex";
+                    }, 3000); // Aparece por 3 segundos
+                } else {
+                    document.getElementById("contentWrapper").style.display = "flex";
+                }
+            }, loadingTime);
         }
 
-        function checkMobile() {
-            const isMobile = /Mobi|Android/i.test(navigator.userAgent);
-            if (isMobile) {
-                document.getElementById("rotateScreen").style.display = "flex";
-                setTimeout(() => {
-                    document.getElementById("rotateScreen").style.display = "none";
-                    document.getElementById("contentWrapper").style.display = "flex";
-                }, 3000);
-            } else {
-                document.getElementById("contentWrapper").style.display = "flex";
-            }
+        function isMobileDevice() {
+            return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent);
         }
 
         showLoadingScreen();
     </script>
 
     <script src="jogo.js"></script>
+
 </body>
 </html>
