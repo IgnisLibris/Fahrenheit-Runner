@@ -47,7 +47,7 @@ let gameOver = false;
 let spawnTime = 0;
 
 const fireImage = new Image();
-fireImage.src = "Fire.gif";
+fireImage.src = "fire.png";
 
 const bookImage = new Image();
 bookImage.src = "books.png";
