@@ -21,7 +21,7 @@
             width: 100%;
             height: 100%;
             background-color: white;
-            display: flex;
+            display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -190,7 +190,6 @@
 
             localStorage.setItem("lastVisit", now);
             document.getElementById("loadingScreen").style.display = "flex";
-            document.getElementById("contentWrapper").style.display = "none";
 
             setTimeout(() => {
                 document.getElementById("loadingScreen").style.display = "none";
