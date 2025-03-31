@@ -112,7 +112,7 @@ function manageSpawning() {
 
 // Aumentar a dificuldade do jogo
 function increaseDifficulty() {
-    spawnTime += 0,5;
+    spawnTime += 0.5;
     if (spawnTime % 30 === 0) {
         spawnInterval = Math.max(800, spawnInterval - 50);
         obstacleSpeed += 0.1;
@@ -218,64 +218,37 @@ function draw() {
     }
 }
 
-// Loop principal do jogo
-function gameLoop(timestamp) {
-    update(timestamp);
-    draw();
-    if (!gameOver) requestAnimationFrame(gameLoop);
-}
-
 // Tela de carregamento
-const loadingScreen = document.getElementById("loadingScreen");
-const gameContent = document.getElementById("gameContent");
-const loadingQuote = document.getElementById("loadingQuote");
-
-const quotes = [
-    "Não precisamos ser deixados sozinhos. Precisamos ser realmente incomodados de vez em quando - Fahrenheit 451",
-    "Queimar era um prazer - Fahrenheit 451",
-    "Façamos uma brecha no espírito do homem. Quem sabe quem poderia ser alvo do homem lido - Fahrenheit 451",
-    "Não as coloque em terreno movediço, como filosofia ou sociologia, com que comparar suas experiências. Aí reside a melancolia - Fahrenheit 451",
-    "Eu me agarrarei firme ao mundo algum dia. Já pus um dedo nele; é um começo - Fahrenheit 451"
-];
-
-let loadingInterval;
-let fadeOutTimeout;
-
-function showRandomQuote() {
-    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-    loadingQuote.innerText = randomQuote;
-}
-
 function showLoadingScreen() {
-    const randomTime = Math.floor(Math.random() * (20000 - 5000 + 1)) + 5000; // Entre 5 e 20 segundos
-    const quoteChangeInterval = 10000; // A cada 10 segundos a citação muda
+    const loadingScreen = document.getElementById('loadingScreen');
+    const gameContent = document.getElementById('gameContent');
 
-    // Exibir a tela de carregamento
-    loadingScreen.style.visibility = "visible";
-    loadingScreen.style.opacity = "1";
+    if (checkFirstVisit()) {
+        loadingScreen.style.visibility = 'visible';
+        loadingScreen.style.opacity = '1';
 
-    // Exibir uma citação aleatória
-    showRandomQuote();
-
-    // Alterar a citação a cada 10 segundos
-    loadingInterval = setInterval(showRandomQuote, quoteChangeInterval);
-
-    // Após o tempo aleatório, esconder a tela de carregamento
-    fadeOutTimeout = setTimeout(() => {
-        loadingScreen.style.animation = "fadeOut 1s ease forwards"; // Animar desaparecimento da tela
+        const randomTime = Math.floor(Math.random() * 20000) + 5000; // Tempo aleatório entre 5 e 20 segundos
+        
         setTimeout(() => {
-            loadingScreen.style.visibility = "hidden";
-            loadingScreen.style.opacity = "0";
-            gameContent.style.display = "block"; // Mostrar o conteúdo do jogo
-        }, 1000); // Aguardar 1 segundo para garantir que a animação termine
-    }, randomTime);
+            loadingScreen.style.animation = 'fadeOut 1s forwards';
+            setTimeout(() => {
+                loadingScreen.style.visibility = 'hidden';
+                gameContent.style.display = 'block';
+            }, 1000);
+        }, randomTime);
+    } else {
+        document.getElementById('loadingScreen').style.display = 'none';
+        document.getElementById('gameContent').style.display = 'block';
+    }
 }
 
-if (!localStorage.getItem("hasVisited")) {
-    localStorage.setItem("hasVisited", "true");
-    showLoadingScreen();
-} else {
-    gameContent.style.display = "block"; // Mostrar diretamente o conteúdo do jogo
+// Verifica se é a primeira visita
+function checkFirstVisit() {
+    if (!localStorage.getItem('visited')) {
+        localStorage.setItem('visited', 'true');
+        return true;
+    }
+    return false;
 }
 
-gameLoop();
+showLoadingScreen();
