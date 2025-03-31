@@ -25,6 +25,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            font-family: 'Times New Roman', serif;
         }
 
         #loadingScreen img {
@@ -45,7 +46,7 @@
             margin-top: 10px;
         }
 
-        /* Tela de aviso para girar o celular */
+        /* Tela de orientação para celulares */
         #rotateScreen {
             position: fixed;
             top: 0;
@@ -60,84 +61,19 @@
 
         #rotateScreen img {
             width: 150px;
-            height: auto;
+            height: 150px;
         }
 
-        /* Título */
-        #gameTitle {
-            font-size: 40px;
-            color: red;
-            margin-top: 20px;
-        }
-
-        /* Área do jogo */
-        #gameArea {
-            position: relative;
-            width: 936px;
-            height: 230px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 2px solid red;
-            margin: 20px auto 0;
-        }
-
-        canvas {
-            background-color: #e0e0e0;
-        }
-
-        /* Tela de fim de jogo */
-        #gameOverScreen {
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 60%;
-            height: 50%;
-            background-color: red;
-            color: white;
-            text-align: center;
-            padding: 20px;
-            border-radius: 10px;
-        }
-
-        #gameOverScreen button {
-            font-size: 18px;
-            padding: 10px 20px;
-            background-color: white;
-            color: red;
-            border: 2px solid red;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-
-        #gameOverScreen button:hover {
-            background-color: red;
-            color: white;
-        }
-
-        /* Placar */
-        #scoreBoard {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: rgba(128, 128, 128, 0.7);
-            padding: 5px 10px;
-            border-radius: 5px;
-            color: black;
-            font-size: 18px;
-        }
-
+        /* Conteúdo do jogo */
         #contentWrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
+            display: none;
         }
     </style>
 </head>
 <body>
-
     <!-- Tela de carregamento -->
     <div id="loadingScreen">
         <img src="Fire.gif" alt="Fogo">
@@ -145,9 +81,9 @@
         <p id="loadingQuote"></p>
     </div>
 
-    <!-- Tela de aviso para girar o celular -->
+    <!-- Tela de orientação para celulares -->
     <div id="rotateScreen">
-        <img src="girarcell.gif" alt="Gire seu celular">
+        <img src="girarcell.gif" alt="Gire o celular">
     </div>
 
     <!-- Conteúdo do jogo -->
@@ -155,15 +91,6 @@
         <div id="gameTitle">Fahrenheit Runner</div>
         <div id="gameArea">
             <canvas id="gameCanvas"></canvas>
-            <div id="gameOverScreen">
-                <h1>Burn, baby, burn!</h1>
-                <p id="finalScore"></p>
-                <button onclick="window.location.reload();">Jogar Novamente</button>
-            </div>
-            <div id="scoreBoard">
-                <span id="score">Pontos: 0</span><br>
-                <span id="record">Recorde: 0</span>
-            </div>
         </div>
     </div>
 
@@ -181,18 +108,6 @@
         }
 
         function showLoadingScreen() {
-            const lastVisit = localStorage.getItem("lastVisit");
-            const now = Date.now();
-            const thirtyMinutes = 30 * 60 * 1000;
-
-            if (lastVisit && now - lastVisit < thirtyMinutes) {
-                document.getElementById("loadingScreen").style.display = "none";
-                showRotateScreen();
-                return;
-            }
-
-            localStorage.setItem("lastVisit", now);
-
             document.getElementById("loadingScreen").style.display = "flex";
             document.getElementById("contentWrapper").style.display = "none";
 
@@ -210,30 +125,24 @@
             setTimeout(() => {
                 clearInterval(quoteInterval);
                 document.getElementById("loadingScreen").style.display = "none";
-                showRotateScreen();
+                checkMobile();
             }, loadingTime);
         }
 
-        function showRotateScreen() {
-            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            const rotateScreen = document.getElementById("rotateScreen");
-            const contentWrapper = document.getElementById("contentWrapper");
-
+        function checkMobile() {
+            const isMobile = /Mobi|Android/i.test(navigator.userAgent);
             if (isMobile) {
-                rotateScreen.style.display = "flex";
+                document.getElementById("rotateScreen").style.display = "flex";
                 setTimeout(() => {
-                    rotateScreen.style.display = "none";
-                    contentWrapper.style.display = "flex";
+                    document.getElementById("rotateScreen").style.display = "none";
+                    document.getElementById("contentWrapper").style.display = "flex";
                 }, 3000);
             } else {
-                contentWrapper.style.display = "flex";
+                document.getElementById("contentWrapper").style.display = "flex";
             }
         }
 
         showLoadingScreen();
     </script>
-
-    <script src="jogo.js"></script>
-
 </body>
 </html>
