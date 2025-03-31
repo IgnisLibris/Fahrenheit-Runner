@@ -21,11 +21,10 @@
             width: 100%;
             height: 100%;
             background-color: white;
-            display: none; /* Agora a tela começa escondida */
+            display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-family: 'Times New Roman', serif;
         }
 
         #loadingScreen img {
@@ -44,6 +43,24 @@
             color: black;
             width: 60%;
             margin-top: 10px;
+        }
+
+        /* Tela de aviso para girar o celular */
+        #rotateScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #rotateScreen img {
+            width: 150px;
+            height: auto;
         }
 
         /* Título */
@@ -82,7 +99,6 @@
             color: white;
             text-align: center;
             padding: 20px;
-            font-family: 'Times New Roman', serif;
             border-radius: 10px;
         }
 
@@ -129,6 +145,11 @@
         <p id="loadingQuote"></p>
     </div>
 
+    <!-- Tela de aviso para girar o celular -->
+    <div id="rotateScreen">
+        <img src="girarcell.gif" alt="Gire seu celular">
+    </div>
+
     <!-- Conteúdo do jogo -->
     <div id="contentWrapper">
         <div id="gameTitle">Fahrenheit Runner</div>
@@ -164,21 +185,17 @@
             const now = Date.now();
             const thirtyMinutes = 30 * 60 * 1000;
 
-            // Se o usuário jogou nos últimos 30 minutos, pula a tela de carregamento
             if (lastVisit && now - lastVisit < thirtyMinutes) {
                 document.getElementById("loadingScreen").style.display = "none";
-                document.getElementById("contentWrapper").style.display = "flex";
+                showRotateScreen();
                 return;
             }
 
-            // Salva o novo tempo de visita
             localStorage.setItem("lastVisit", now);
 
-            // Exibe a tela de carregamento corretamente
             document.getElementById("loadingScreen").style.display = "flex";
             document.getElementById("contentWrapper").style.display = "none";
 
-            // Alterna frases a cada 10 segundos
             const quoteElement = document.getElementById("loadingQuote");
             let quoteIndex = 0;
             quoteElement.innerText = quotes[quoteIndex];
@@ -188,14 +205,29 @@
                 quoteElement.innerText = quotes[quoteIndex];
             }, 10000);
 
-            // Define o tempo de carregamento aleatório entre 5s e 20s
             const loadingTime = getRandomTime(5000, 20000);
 
             setTimeout(() => {
                 clearInterval(quoteInterval);
                 document.getElementById("loadingScreen").style.display = "none";
-                document.getElementById("contentWrapper").style.display = "flex";
+                showRotateScreen();
             }, loadingTime);
+        }
+
+        function showRotateScreen() {
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            const rotateScreen = document.getElementById("rotateScreen");
+            const contentWrapper = document.getElementById("contentWrapper");
+
+            if (isMobile) {
+                rotateScreen.style.display = "flex";
+                setTimeout(() => {
+                    rotateScreen.style.display = "none";
+                    contentWrapper.style.display = "flex";
+                }, 3000);
+            } else {
+                contentWrapper.style.display = "flex";
+            }
         }
 
         showLoadingScreen();
